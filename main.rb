@@ -19,14 +19,22 @@ def mark_board(new_game, player, input)
   end
 end
 
+def check_choice(new_game, input, player)
+  row, col = new_game.square_to_indexes(input)
+  # base case
+  return input if (new_game.data[row][col].is_a? Integer) && CHOICES.include?(input)
+
+  # recurse
+  puts "\n***Square #{input} is unavailabe, try again***\n"
+  new_game.display_board
+  validate_input(new_game, player)
+end
+
 def validate_input(new_game, player)
   player.prompt
   input = gets.chomp.to_i
-  unless CHOICES.include?(input)
-    validate_input(new_game, player)
-    return
-  end
-  input
+  # can make this check choice & ensure it is an available square!
+  check_choice(new_game, input, player)
 end
 
 def go(new_game)
@@ -37,6 +45,4 @@ def go(new_game)
 end
 
 # main
-
-new_game = Game.new
-go(new_game)
+go(Game.new)
