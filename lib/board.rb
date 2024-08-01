@@ -1,11 +1,13 @@
 # game board
 class Game
-  attr_accessor :data
+  attr_accessor :data, :players, :turn
 
-  # CROSS = [[data[0][0], data[1][1], data[2][2]], [data[0][2], data[1][1], data[2][0]]]
+  # CROSS = [[data[0][0], data[1][1], data[2][2]], [data[0][2], data[1][1], data[2][0]]].freeze
 
   def initialize
     self.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    self.players = [Player.new, Player.new]
+    self.turn = 0
   end
 
   def update_board(square, icon)
@@ -26,6 +28,7 @@ class Game
     3.times do |row|
       draw_row(row)
     end
+    true
   end
 
   # could possibly change this to a loop using an array to store differences
@@ -43,10 +46,6 @@ class Game
     end
     check_cross
   end
-
-  # def generate_col
-  #   [[[], [], []], [[], []]]
-  # end
 
   def check_row(row)
     match?(row)
@@ -75,5 +74,9 @@ class Game
   # match? method which checks a justificatory arr and checks that is match is
   def match?(justificatory_arr)
     [%w[X X X], %w[O O O]].include?(justificatory_arr)
+  end
+
+  def curr_player
+    turn.even? ? players[0] : players[1]
   end
 end
