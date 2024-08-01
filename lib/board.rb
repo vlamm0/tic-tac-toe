@@ -2,8 +2,6 @@
 class Game
   attr_accessor :data, :players, :turn
 
-  # CROSS = [[data[0][0], data[1][1], data[2][2]], [data[0][2], data[1][1], data[2][0]]].freeze
-
   def initialize
     self.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     self.players = [Player.new, Player.new]
@@ -22,6 +20,7 @@ class Game
     [row, col]
   end
 
+  # draws top line and 3 rows
   def display_board
     top_line = '_' * 17
     puts " #{top_line} "
@@ -31,7 +30,7 @@ class Game
     true
   end
 
-  # could possibly change this to a loop using an array to store differences
+  # draws 3 slightly different segments to make comprehensible row
   def draw_row(row)
     formula = data[row]
     puts '|     |     |     |'
@@ -39,6 +38,7 @@ class Game
     puts '|_____|_____|_____|'
   end
 
+  # checks all justificatory paths for winner
   def winner?
     col = [[], [], []]
     data.each do |row|
@@ -47,10 +47,12 @@ class Game
     check_cross
   end
 
+  # checks for row match
   def check_row(row)
     match?(row)
   end
 
+  # checks for column match
   def check_col(row, col)
     3.times do |i|
       col[i].push(row[i])
@@ -59,10 +61,12 @@ class Game
     false
   end
 
+  # checks for diagonal match
   def check_cross
     match?(left_cross) || match?(right_cross)
   end
 
+  # 2 diagonal lines' data
   def left_cross
     [data[0][0], data[1][1], data[2][2]]
   end
