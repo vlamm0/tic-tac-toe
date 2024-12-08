@@ -1,6 +1,6 @@
 # requirements
-require_relative 'lib/board'
-require_relative 'lib/player'
+require_relative './board'
+require_relative './player'
 CHOICES = [1, 2, 3, 4, 5, 6, 7, 8, 9].freeze
 
 # start next turn
@@ -51,4 +51,4 @@ def win_screen(new_game)
 end
 
 # main
-puts go(Game.new)
+# puts go(Game.new)
