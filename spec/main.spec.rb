@@ -117,4 +117,45 @@ describe Game do
       expect(test_game.right_cross).to eq([1, 'X', 1])
     end
   end
+
+  describe '#update_board' do
+    let(:icon) { 'X' }
+    let(:square) { 1 }
+    before do
+      allow(test_game).to receive(:square_to_indexes).and_return([2, 1])
+    end
+    it 'updates board data correctly' do
+      test_game.update_board(square, icon)
+      sol = test_game.instance_variable_get(:@data)
+      expect(sol).to eq([[1, 2, 3], [4, 5, 6], [7, 'X', 9]])
+    end
+  end
+
+  describe '#square_to_index' do
+    let(:square) { 7 }
+    it 'returns correct 2d array element' do
+      expect(test_game.square_to_indexes(square)).to eq([2, 0])
+    end
+  end
+
+  describe '#curr_player' do
+    let(:player1) { instance_double(Player, player: '1') }
+    let(:player2) { instance_double(Player, player: '2') }
+    context 'on odd turn' do
+      it 'returns player 2' do
+        test_game.instance_variable_set(:@turn, 7)
+        test_game.instance_variable_set(:@players, [player1, player2])
+        sol = test_game.curr_player.player
+        expect(sol).to eq('2')
+      end
+    end
+    context 'on even turn' do
+      it 'returns player 1' do
+        test_game.instance_variable_set(:@turn, 6)
+        test_game.instance_variable_set(:@players, [player1, player2])
+        sol = test_game.curr_player.player
+        expect(sol).to eq('1')
+      end
+    end
+  end
 end

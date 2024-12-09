@@ -27,7 +27,7 @@ class Game
     3.times do |row|
       draw_row(row)
     end
-    true
+    true # this could be an unnecessary return statement
   end
 
   # draws 3 slightly different segments to make comprehensible row
