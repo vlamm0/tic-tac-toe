@@ -159,3 +159,72 @@ describe Game do
     end
   end
 end
+
+RSpec.describe 'main.rb Methods' do
+  describe '#go' do
+    let(:test_game) { instance_double(Game, turn: 9) }
+    it 'returns DRAW on turn 9' do
+      expect(go(test_game)).to eq("***GAME OVER****\n\n***~DRAW~***")
+    end
+  end
+
+  describe '#check_choice' do
+    let(:player) { instance_double(Player) }
+    let(:test_game) { instance_double(Game, data: [['X', 2, 3], [4, 5, 6], [7, 8, 9]]) }
+    context 'when choice is valid' do
+      before do
+        allow(test_game).to receive(:square_to_indexes).and_return([0, 1])
+      end
+      it 'returns input' do
+        expect(check_choice(test_game, 2, player)).to eq(2)
+      end
+    end
+    context 'when choice is invalid' do
+      subject(:test_game) { Game.new }
+      before do
+        test_game.instance_variable_set(:@data, [['X', 2, 3], [4, 5, 6], [7, 8, 9]])
+        allow(test_game).to receive(:display_board).and_return(nil)
+        allow(self).to receive(:gets).and_return('1', 'O', '1000', '2')
+        allow(player).to receive(:prompt).and_return(nil)
+        allow(self).to receive(:puts).and_return(nil)
+      end
+      it 'recurses until valid input is given' do
+        expect(self).to receive(:gets).exactly(4).times
+
+        check_choice(test_game, 1, player)
+      end
+      it 'returns input' do
+        expect(check_choice(test_game, 'X', player)).to eq(2)
+      end
+    end
+  end
+
+  describe '#mark_board' do
+      subject(:test_game) { Game.new }
+      let(:player) { instance_double(Player, icon: 'X') }
+      let(:input) { ' X' }
+    context 'when there is a winner' do
+      before do
+        allow(test_game).to receive(:update_board).and_return(nil)
+        allow(test_game).to receive(:winner?).and_return(true)
+        allow(self).to receive(:win_screen).and_return('GAME OVER')
+      end
+      it 'goes to win screen' do
+        expect(mark_board(test_game, player, input)).to eq('GAME OVER')
+      end
+    end
+    context 'when there is not a winner' do
+      before do
+        allow(test_game).to receive(:update_board).and_return(nil)
+        allow(test_game).to receive(:winner?).and_return(false)
+        allow(self).to receive(:go).and_return(nil)
+      end
+      it 'updates turn' do
+        pre_turn = test_game.instance_variable_get(:@turn)
+        mark_board(test_game, player, input)
+        expect(test_game.instance_variable_get(:@turn)).to be(1+pre_turn)
+        
+      end
+    end
+  end
+end

@@ -10,25 +10,27 @@ def go(new_game)
   new_game.display_board
   player = new_game.curr_player
   input = validate_input(new_game, player)
+  # @
   mark_board(new_game, player, input)
 end
 
 # gives prompt and gets player move
 def validate_input(new_game, player)
+  new_game.display_board
   player.prompt
   input = gets.chomp.to_i
-  check_choice(new_game, input, player)
+  input.between?(1, 9) ? check_choice(new_game, input, player) : validate_input(new_game, player)
 end
 
 # checks that player choice is valid and available
 def check_choice(new_game, input, player)
-  row, col = new_game.square_to_indexes(input)
-  # base case
-  return input if (new_game.data[row][col].is_a? Integer) && CHOICES.include?(input)
-
+  if input.is_a?(Integer)
+    row, col = new_game.square_to_indexes(input)
+    # base case
+    return input if (input.between? 1, 9) && (new_game.data[row][col].is_a? Integer)
+  end
   # recurse
   puts "\n***Square #{input} is unavailabe, try again***\n"
-  new_game.display_board
   validate_input(new_game, player)
 end
 
